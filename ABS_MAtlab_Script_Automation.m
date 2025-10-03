@@ -39,3 +39,26 @@ mu_ice = ([0.00  0.05  0.10  0.12  0.13  0.14  0.14  0.14  0.14  0.14  0.14  0.1
 
 %% lateral dynamics
 delta  = 5 * pi/180 ;
+
+%%
+% Load and simulate the model
+simOut = sim('Simulink_ABS_Braking_Vehicle_Dynamics');
+
+% Access logged signals
+woABS = simOut.logsout.get('Stopping_Distance_WO_ABS');
+wABS  = simOut.logsout.get('Stopping_Distance_W_ABS');
+
+% Convert to timeseries
+ts_woABS = woABS.Values;
+ts_wABS  = wABS.Values;
+
+% Plot Stopping Distance Comparison: With and Without ABS directly
+figure;
+plot(ts_woABS.Time, ts_woABS.Data, 'r', 'LineWidth', 2); hold on;
+plot(ts_wABS.Time, ts_wABS.Data, 'b', 'LineWidth', 2);
+xlabel('Time (s)');
+ylabel('Stopping Distance (m)');
+title('Stopping Distance Comparison: With and Without ABS');
+legend('Without ABS', 'With ABS');
+grid on;
+
